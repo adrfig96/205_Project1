@@ -3,7 +3,7 @@ from PIL import Image
 def median(Dlist = []):
     sortedList = sorted(Dlist)
     middleIndex = ((len(Dlist)+1)/2)-1
-    return sortedList[middleindex]
+    return sortedList[int(middleIndex)]
 
 def main():
     #Opening Images
@@ -22,28 +22,34 @@ def main():
     image_size = image_list[0].size
     total_pixels =  image_size[0]*image_size[1]
     finalimage = Image.new("RGB", image_size , "red")
-    finalimage.putdata(image_data[0])
-    finalimage.save("Final.png")
+
     #Processing
     #//////////////////////////////
     redarray = []
     greenarray = []
     bluearray = []
+    print ("Image size: ", image_size, "Total pixels: ", image_size[0]*image_size[1])
+    print ("Applying median filter...")
     for k in range (total_pixels):
         for i in range (9):
             redarray.append(image_data[i][k][0])
             greenarray.append(image_data[i][k][1])
             bluearray.append(image_data[i][k][2])
-        
-    print ("Image size: ", image_size, "Total pixels: ", image_size[0]*image_size[1])
-
-
-  
+        redmedian = median(redarray)
+        greenmedian = median(greenarray)
+        bluemedian = median(bluearray)
+        finalimage_data.append ((redmedian, greenmedian, bluemedian))
+        redarray.clear()
+        greenarray.clear()
+        bluearray.clear()
+        #print("Current pixel: ", k, "R med: ", redmedian, "G med: ", greenmedian, "B med: ", bluemedian)
+        #print("Tuple for this pixel: ", finalimage_data[k])
+    finalimage.putdata(finalimage_data)
+    finalimage.save("Final.png")
+    print("DONE!")
     #image_data is a list of list of tuples
     #Where the first index is which image, the second is which pixel, and the tuple is the RGB values
     #For example, [0][3][1] is the first image, 4th pixel in the first row, and the green band
-
-    #NOTE TO SELF: do [image number][median]
     #FIND MEDIAN OF EACH BAND THEN PUT THEM SEPARATELY INTO NEW PICTURE
 
 if __name__ == "__main__":
